@@ -14,76 +14,52 @@
 <!-- Defines element markup -->
 <dom-module id="todo-element">
     <style>
-        .list {
-            padding: 0;
+        .todo {
+            padding: 10px;
         }
         
-        .list paper-item {
-            min-height: 80px;
-            border-bottom: 1px solid #dedede;
-            background-color: #fafafa;
+        paper-checkbox {
+            float: right;
+            margin: 2vh 2vw;
         }
         
-        #todoEntry {
-            margin: 0;
-            width: 100%;
-            max-width: none;
-            border-bottom: 1px solid #ccc;
+        paper-button {
+            background: #ccc;
         }
         
-        paper-input {
-            margin: 0 4vw;
-            padding: 0;
+        paper-fab {
+            position: absolute;
+            bottom: 3vh;
+            right: 3vw;
+            background: #4DD0E1;
+        }
+        
+        .done {
+            background: green;
+        }
+        
+        .info {
+            font-style: italic;
+            font-size: 14px;
+            color: #696969;
+            padding-top: 0;
+            padding-bottom: 0;
         }
         
         paper-material {
             background-color: #fff;
             max-width: 640px;
-            width: 95%;
+            width: 90%;
             margin: 25px auto;
             position: relative;
         }
         
-        #todos {
-            overflow-y: scroll;
-            height: 66vh;
-        }
-        #todos {
-            overflow-y: scroll;
-        }
-      
-        paper-fab {
-            position: absolute;
-            background: #00BCD4;
-            bottom: 2vh;
-            right: 2vw;
-        }
-        .main-panel {
-            background-color: #eee;
-            height: 100vh;
-            overflow-y: hidden;
+        .info span {
+            margin-left: 5px;
         }
         
-        .task-empty paper-item {
-            text-align: center;
-            padding: 25px;
-            color: #6f6f6f;
-        }
-        paper-toolbar {
-            background:#D32F2F;
-        }
-        
-        #made-with {
-            width:100%;
-            margin:0;
-            position: fixed;
-            bottom: 0;
-            text-align: center;
-        }
-        
-        #made-with img {
-            width: 35%;
-            padding: 10px;
+        paper-input {
+            margin: 0 2vw;
         }
     </style>
 
