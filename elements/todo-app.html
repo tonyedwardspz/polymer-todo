@@ -91,10 +91,69 @@
     </style>
 
     <template>
-    	
+
+    	<paper-drawer-panel>
+    		<paper-header-panel class="side-panel" drawer>
+    			<paper-toolbar>
+    				<paper-item>Side Bar Title</paper-item>
+    			</paper-toolbar>
+
+
+		    	<paper-menu class="list" id="completed">
+		    		<!-- If template -->
+		    		<template is="dom-if" if="{{!done.length}}">
+			    		<paper-material>
+			    			<paper-item>Completed tasks will appear here</paper-item>
+			    		</paper-material>
+		    		</template>
+
+		    		<!-- Looped template -->
+		    		<template id="done" is="dom-repeat" items="{{done}}">
+			    		<paper-item>{{item.task}}<i style="margin-left: 5px;">{{item.user}}</i></paper-item>
+		    		</template>
+		    	</paper-menu>
+	    	</paper-header-panel>
+
+	    	<paper-header-panel main class="main-panel">
+	    		<paper-toolbar>
+    				<paper-item>Main Content</paper-item>
+    			</paper-toolbar>
+
+    			<div style="border-left: 1px solid #ccc;">
+	    			<paper-material id="todoEntry" elevation="2">
+	    				<paper-input id="tTask" label="Task"></paper-input>
+	    				<paper-input id="tUser" label="Username" char-counter max-length="16"></paper-input>
+	    				<paper-fab icon="icons:add" on-tap="postTask"></paper-fab>
+	    			</paper-material>
+	    			<div id="todos">
+		    			<template is="dom-if" if="{{!todo.length}}">
+			    			<paper-material>
+			    				<paper-item>No Tasks remain. Updates happen in real time</paper-item>
+		    			</template>
+		    			<template id="tasks" is="dom-repeat" items="{{todo}}">
+		    			<todo-element user="{{item.user" task="{{item.task}}" rid="{{item.rid}}"></todo-element>
+		    			</template>
+	    			</div>
+    			</div>
+
+	    	</paper-header-panel>
+			</paper-drawer-panel>    	
     </template>
 
 	</dom-module>
 	<script>
+		Polymer({
+			is: "todo-app",
+			properties: {
+				todo: {
+					tyoe: Array,
+					value: [{user: "Tony", task: "Master Polymer", rid:0}]
+				},
+				done: {
+					type: Array,
+					value: []
+				},
+			}
+		});
 
 	</script>
