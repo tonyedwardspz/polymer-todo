@@ -146,14 +146,46 @@
 			is: "todo-app",
 			properties: {
 				todo: {
-					tyoe: Array,
+					type: Array,
 					value: [{user: "Tony", task: "Master Polymer", rid:0}]
 				},
 				done: {
 					type: Array,
 					value: []
 				},
-			}
+			},
+            postTask: function(e) {
+                var tsk = this.$.tTask.value;
+                var usr = this.$tUser.value;
+                if (usr == ""){
+                    usr = "Anonymous"
+                }
+                if (tsk == ""){
+                    alert("Task is Empty");
+                    return;
+                }
+                this.$.tTask.value = "";
+            },
+            handleComplete: function(e){
+                var idx = findWIthAttr(this.todo, 'rid', e.target.rid);
+                var itm = this.todo[idx];
+                itm.task = e.target.task;
+                itm.user = this.$.tUser.value;
+                itm.type = "done";
+            },
+            ready: function(e) {
+                this.addEventListener('complete', this.handleComplete)
+            }
 		});
+        function findWithAttr(array, attr, value) {
+            for (var i = 0; i < array.length; i++) {
+                if(array[i][attr] === value) {
+                    return i;
+                }
+            }
+        }
+        function randID(){
+            return Math.floor(Math.random()*10000);
+        }
 
 	</script>
