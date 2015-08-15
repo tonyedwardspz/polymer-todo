@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <!-- Imports polymer -->
-    <link rel="import" href="../bower_components/polymer/polymer.html">
-    <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
-    <link rel="import" href="../bower_components/paper-item/paper-item.html">
-    <link rel="import" href="../bower_components/paper-input/paper-input.html">
-    <link rel="import" href="../bower_components/paper-material/paper-material.html">
-    <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-    <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
-</head>
+    <head>
+        <link href="../bower_components/polymer/polymer.html" rel="import">
+        <link href="../bower_components/paper-checkbox/paper-checkbox.html" rel="import">
+        <link href="../bower_components/paper-item/paper-item.html" rel="import">
+        <link href="../bower_components/paper-input/paper-input.html" rel="import">
+        <link href="../bower_components/paper-material/paper-material.html" rel="import">
+        <link href="../bower_components/iron-icons/iron-icons.html" rel="import">
+        <link href="../bower_components/paper-fab/paper-fab.html" rel="import">
+    </head>
 
-<!-- Defines element markup -->
-<dom-module id="todo-element">
-    <style>
+    <dom-module id="todo-element" attributes="task user rid">
+      <style>
         .todo {
             padding: 10px;
         }
@@ -61,59 +59,61 @@
         paper-input {
             margin: 0 2vw;
         }
-    </style>
-
-    <template>
+        
+      </style>
+      <template>
+        
         <paper-material class="todo" elevation="1">
             <paper-checkbox checked="{{completed}}"></paper-checkbox>
-            <paper-fab hidden={{editing}} icon="icons:create" on-tap="doEdit" mini></paper-fab>
-            <paper-fab hidden={{!editing}} icon="icons:done" on-tap="doEdit" mini></paper-fab>
+            <paper-fab hidden={{editing}}  icon="icons:create" on-tap="doEdit" class="edit" mini></paper-fab>
+            <paper-fab hidden={{!editing}} icon="icons:done"   on-tap="doEdit" class="done" mini></paper-fab>
             <paper-item hidden="{{editing}}" id="task">{{task}}</paper-item>
             <paper-input id="edit" hidden="{{!editing}}" value="{{task}}"></paper-input>
-            <paper-item>Created by: <span>{{user}}</span></paper-item>
-            <paper-item>{{time}}</paper-item>
+            <paper-item class="info">Created by: <span>{{ user }}</span></paper-item>
+            <paper-item class="info">{{ time }}</paper-item>
         </paper-material>
-    </template>
-    
-    <!-- Registers custom element -->
-    <script>
-        Polymer({
-            is: 'todo-element',
-            // declare public API properties
-            properties {
-                user: {
-                    type: String,
-                    value: ""
-                },
-                task: {
-                    type: String,
-                    value: "Hello!"
-                },
-                rid: {
-                    type: Number,
-                    value: -1
-                },
-                time: {
-                    type: String,
-                    value: new Date().toLocaleString()
-                },
-                completed: {
-                    type: Boolean,
-                    value: false,
-                    observer: 'compChanged'
-                },
-                editing: {
-                    type: Boolean,
-                    value: false
-                }
-            },
-            compChanged: function(e){
-                if (e){] this.fire('compete', this);}
-            },
-            doEdit: function(e){
-                this.editing=!this.editing;
-            }
-        });
-    </script>
-</dom-module>
 
+      </template>
+    </dom-module>
+
+    <script>
+      Polymer({
+        is: "todo-element",
+        properties: {
+            user: {
+                type: String,
+                value: ""   
+            },
+            task: {
+                type: String,
+                value: "Hello!"
+            },
+            rid: {
+                type: Number,
+                value: -1
+            },
+            time: {
+                type: String,
+                value: new Date().toLocaleString()
+            },
+            completed: {
+                type: Boolean,
+                value: false,
+                observer:'compChanged'
+            },
+            editing: {
+                type: Boolean,
+                value: false    
+            }
+        },
+        compChanged: function(e){
+            if(e){ this.fire('complete',this); }
+        },
+        doEdit: function(e){
+            this.editing=!this.editing;
+            if (!this.editing){ this.fire('edit', {rid:this.rid, task:this.task}); }
+        },
+        ready: function(e){
+        }
+      });
+    </script>
