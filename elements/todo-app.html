@@ -3,6 +3,7 @@
     <head>
         <link href="../bower_components/polymer/polymer.html" rel="import">
         <link href="../elements/todo-element.html" rel="import">
+        <link href="../elements/done-element.html" rel="import">
         <link href="../bower_components/paper-drawer-panel/paper-drawer-panel.html" rel="import">
         <link href="../bower_components/paper-header-panel/paper-header-panel.html" rel="import">
         <link href="../bower_components/paper-toolbar/paper-toolbar.html" rel="import">
@@ -13,7 +14,7 @@
         <link href="../bower_components/paper-input/paper-input.html" rel="import">
         <link href="../bower_components/iron-icons/iron-icons.html" rel="import">
         <link href="../bower_components/pubnub-element/pubnub-element.html" rel="import">
-
+        <link href="../bower_components/iron-localstorage/iron-localstorage.html" rel="import">
     </head>
 
     <dom-module id="todo-app">
@@ -52,11 +53,8 @@
             overflow-y: scroll;
             height: 66vh;
         }
-        #todos {
-            overflow-y: scroll;
-        }
       
-        paper-fab {
+        paper-fab .add {
             position: absolute;
             background: #00BCD4;
             bottom: 2vh;
@@ -71,33 +69,46 @@
         </style>
       
         <template>
+
+        <iron-localstorage name="todo-storage"
+                               value="{{userName}}"
+                               on-iron-localstorage-load-empty="initializeDefaultName"></iron-localstorage>
             <paper-drawer-panel>
                 <paper-header-panel class="side-panel" drawer>
                     <paper-toolbar>
                         <paper-item>Completed Tasks</paper-item>
                     </paper-toolbar>
+
+
                     <paper-menu id="completed" class="list">
                         <template is="dom-if" if="{{!done.length}}">
                             <paper-material class="task-empty">
                                 <paper-item elevation="2">Completed tasks will appear here!</paper-item>
                             </paper-material>
                         </template>
+
                         <template id="done" is="dom-repeat" items="{{done}}">
-                            <paper-item>{{item.task}}<i style="margin-left: 5px;">{{item.user}}</i></paper-item>
+                            <done-element user="{{item.user}}" task="{{item.task}}" rid="{{item.rid}}"></done-element>
                         </template>
+
                     </paper-menu>
+
+
                 </paper-header-panel>
                 <paper-header-panel main class="main-panel">
                     <paper-toolbar>
                         <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
                         <paper-item>Active Tasks</paper-item>
                     </paper-toolbar>
+
+
                     <div style="border-left: 1px solid #ccc;">
                         <!-- To create a new Todo -->
                         <paper-material id="todoEntry" elevation="2">
                             <paper-input id="tTask" label="Task"></paper-input>
-                            <paper-input id="tUser" char-counter label="Username" maxlength="16" error="maximum characters exceeded" style="width:75%;display: inline-block" ></paper-input> 
-                            <paper-fab icon="icons:add" on-tap="postTask"></paper-fab>
+                            <paper-input id="tUser" char-counter label="Username" maxlength="16" error="maximum characters exceeded" style="width:75%;display: inline-block" value="{{userName.name}}"></paper-input>
+                            
+                            <paper-fab icon="icons:add" on-tap="postTask" class"add"></paper-fab>
                         </paper-material>
                         <div id="todos">
                             <template is="dom-if" if="{{!todo.length}}">
@@ -110,6 +121,8 @@
                             </template>
                         </div>
                     </div>
+
+
                 </paper-header-panel>
             </paper-drawer-panel> 
             <core-pubnub 
@@ -143,7 +156,23 @@
             present: {
                 type: Array,
                 value: []
+            },
+            userName: {
+                type: Object
+            }, 
+            deleted: {
+                type: Array,
+                value: []
             }
+        },
+        // initializes default if nothing has been stored
+        initializeDefaultName: function() {
+            this.userName = {
+                name: ""
+            }
+        },
+        makeModifications: function() {
+            this.set('userName.name', "TonyTest");
         },
         handleComplete: function(e){
             var idx = findWithAttr(this.todo, 'rid', e.target.rid);
@@ -179,6 +208,15 @@
             this.$.pub.publish();
             this.$.tTask.value = "";
         },
+        deleteTask: function(e){
+          alert("tada")
+          var idx = findWithAttr(this.done, 'rid', e.target.rid);
+          var itm = this.done[idx];
+          itm.type = "deleted";
+          console.log(itm)
+          this.$.pub.message = itm;
+          this.$.pub.publish();
+        },
         subscribeCallback: function(e){
             while(this.messages.length > 0){
                 var item = this.messages.pop();
@@ -203,6 +241,14 @@
                         itm.user = item.user;
                         this.unshift('todo',{task:item.task, user:item.user, rid:item.rid});
                         break;
+                    case "deleted":
+                        var idx = findWithAttr(this.done, 'rid',item.rid);
+                        if (idx == -1){return;}
+                        var itm = this.splice('done', idx, 1)[0];
+                        itm.task = item.task;
+                        itm.user = item.user;
+                        this.unshift('deleted',{task:item.task, user:item.user, rid:item.rid});
+                        break;
                     default:
                         continue;
                 }
@@ -212,6 +258,7 @@
             this.addEventListener('complete', this.handleComplete);
             this.addEventListener('edit', this.handleEdit);
             this.addEventListener('presence', presChange);
+            this.addEventListener('deleteThis', this.deleteTask);
             function presChange(e){
                 var pres = this.present.pop()
                 this.$.here.innerHTML = pres.occupancy;

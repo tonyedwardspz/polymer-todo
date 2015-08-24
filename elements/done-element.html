@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <link href="../bower_components/polymer/polymer.html" rel="import">
+      <link href="../bower_components/paper-checkbox/paper-checkbox.html" rel="import">
+      <link href="../bower_components/paper-item/paper-item.html" rel="import">
+      <link href="../bower_components/paper-input/paper-input.html" rel="import">
+      <link href="../bower_components/paper-material/paper-material.html" rel="import">
+      <link href="../bower_components/iron-icons/iron-icons.html" rel="import">
+      <link href="../bower_components/paper-fab/paper-fab.html" rel="import">
+  </head>
+
+  <dom-module id="done-element" attributes="task user rid">
+  	<style>
+  		.list {
+            padding: 0;
+        }
+        
+        .list paper-item {
+            min-height: 80px;
+            border-bottom: 1px solid #dedede;
+            background-color: #fafafa;
+        }
+        
+        #todoEntry {
+            margin: 0;
+            width: 100%;
+            max-width: none;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        paper-input {
+            margin: 0 4vw;
+            padding: 0;
+        }
+        
+        paper-material {
+            background-color: #fff;
+            max-width: 640px;
+            width: 95%;
+            margin: 25px auto;
+            position: relative;
+        }
+        
+        #todos {
+            overflow-y: scroll;
+            height: 66vh;
+        }
+      
+        paper-fab .add {
+            position: absolute;
+            background: #00BCD4;
+            bottom: 2vh;
+            right: 2vw;
+        }
+        .main-panel {
+            background-color: #eee;
+            height: 100vh;
+            overflow-y: hidden;
+        }
+  	</style>
+		<template>
+
+			<paper-item>{{task}}<i style="margin-left: 5px;">{{user}}</i>
+			  <paper-fab icon="icons:delete" on-tap="removeTask" mini data-rid="{{rid}}"></paper-fab>
+			</paper-item>
+		</template>
+
+		<script>
+		// element registration
+      Polymer({
+        is: "done-element",
+        properties: {
+            user: {
+                type: String,
+                value: ""   
+            },
+            task: {
+                type: String,
+                value: "Hello!"
+            },
+            rid: {
+                type: Number,
+                value: -1
+            }
+        },
+        ready: function(e){
+        },
+        removeTask: function(e){
+        	this.fire('deleteThis', {rid:this.rid, task:this.task});
+        }
+      });
+		</script>
