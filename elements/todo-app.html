@@ -178,7 +178,6 @@
             var idx = findWithAttr(this.todo, 'rid', e.target.rid);
             var itm = this.todo[idx];
             itm.task = e.target.task;
-            itm.user = this.$.tUser.value;
             itm.type = "done";
             this.$.pub.message = itm;
             this.$.pub.publish();
@@ -187,9 +186,6 @@
             var idx = findWithAttr(this.todo, 'rid', e.target.rid);
             var itm = this.todo[idx];
             itm.task = e.target.task;
-            itm.user = this.$.tUser.value;
-            console.log(this.todo[idx])
-            console.log("Edit" + itm.user)
             itm.type = "edit";
             this.$.pub.message = itm;
             this.$.pub.publish();
@@ -214,8 +210,6 @@
           var idx = findWithAttr(this.done, 'rid', e.target.rid);
           var itm = this.done[idx];
           itm.type = "deleted";
-          console.log(itm);
-          itm.user = this.$.tUser.value;
           this.$.pub.message = itm;
           this.$.pub.publish();
         },
@@ -223,8 +217,6 @@
           var idx = findWithAttr(this.done, 'rid', e.target.rid);
           var itm = this.done[idx];
           itm.type = "todo";
-          itm.user = this.$.tUser.value;
-          console.log(itm);
           var itm = this.splice('done', idx, 1)[0];
           this.$.pub.message = itm;
           this.$.pub.publish();

@@ -4,10 +4,11 @@
       <link href="../bower_components/polymer/polymer.html" rel="import">
       <link href="../bower_components/paper-checkbox/paper-checkbox.html" rel="import">
       <link href="../bower_components/paper-item/paper-item.html" rel="import">
-      <link href="../bower_components/paper-input/paper-input.html" rel="import">
       <link href="../bower_components/paper-material/paper-material.html" rel="import">
       <link href="../bower_components/iron-icons/iron-icons.html" rel="import">
       <link href="../bower_components/paper-fab/paper-fab.html" rel="import">
+
+
   </head>
 
   <dom-module id="done-element" attributes="task user rid">
@@ -36,10 +37,12 @@
         }
   	</style>
 		<template>
-			<paper-item>{{task}}<i style="margin-left: 5px;">{{user}}</i>
-			  <paper-fab icon="icons:delete" on-tap="removeTask" mini data-rid="{{rid}}"></paper-fab>
-        <paper-fab icon="icons:redo" on-tap="restoreTask" mini data-rid="{{rid}}"></paper-fab>
-			</paper-item>
+      <paper-material>
+  			<paper-item elevation="2">{{task}}<i style="margin-left: 5px;">{{user}}</i>
+  			  <paper-fab icon="icons:delete" on-tap="removeTask" mini data-rid="{{rid}}"></paper-fab>
+          <paper-fab icon="icons:redo" on-tap="restoreTask" mini data-rid="{{rid}}"></paper-fab>
+  			</paper-item>
+      </paper-material>
 		</template>
 
 		<script>
@@ -66,9 +69,6 @@
         	this.fire('deleteThis', {rid:this.rid, task:this.task});
         },
         restoreTask: function(e){
-          console.log(this.user)
-          console.log(this.task)
-          console.log(this.rid)
           this.fire('revertThis', {rid:this.rid, task:this.task});
         }
       });
