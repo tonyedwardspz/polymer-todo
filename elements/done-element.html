@@ -22,18 +22,6 @@
             background-color: #fafafa;
         }
         
-        #todoEntry {
-            margin: 0;
-            width: 100%;
-            max-width: none;
-            border-bottom: 1px solid #ccc;
-        }
-        
-        paper-input {
-            margin: 0 4vw;
-            padding: 0;
-        }
-        
         paper-material {
             background-color: #fff;
             max-width: 640px;
@@ -46,23 +34,12 @@
             overflow-y: scroll;
             height: 66vh;
         }
-      
-        paper-fab .add {
-            position: absolute;
-            background: #00BCD4;
-            bottom: 2vh;
-            right: 2vw;
-        }
-        .main-panel {
-            background-color: #eee;
-            height: 100vh;
-            overflow-y: hidden;
-        }
   	</style>
 		<template>
 
 			<paper-item>{{task}}<i style="margin-left: 5px;">{{user}}</i>
 			  <paper-fab icon="icons:delete" on-tap="removeTask" mini data-rid="{{rid}}"></paper-fab>
+        <paper-fab icon="icons:redo" on-tap="revertTask" mini data-rid="{{rid}}"></paper-fab>
 			</paper-item>
 		</template>
 
@@ -88,6 +65,9 @@
         },
         removeTask: function(e){
         	this.fire('deleteThis', {rid:this.rid, task:this.task});
+        },
+        revertTask: function(e){
+          this.fire('revertThis', {rid:this.rid, task:this.task});
         }
       });
 		</script>
