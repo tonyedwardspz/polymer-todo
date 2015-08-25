@@ -36,10 +36,9 @@
         }
   	</style>
 		<template>
-
 			<paper-item>{{task}}<i style="margin-left: 5px;">{{user}}</i>
 			  <paper-fab icon="icons:delete" on-tap="removeTask" mini data-rid="{{rid}}"></paper-fab>
-        <paper-fab icon="icons:redo" on-tap="revertTask" mini data-rid="{{rid}}"></paper-fab>
+        <paper-fab icon="icons:redo" on-tap="restoreTask" mini data-rid="{{rid}}"></paper-fab>
 			</paper-item>
 		</template>
 
@@ -66,7 +65,10 @@
         removeTask: function(e){
         	this.fire('deleteThis', {rid:this.rid, task:this.task});
         },
-        revertTask: function(e){
+        restoreTask: function(e){
+          console.log(this.user)
+          console.log(this.task)
+          console.log(this.rid)
           this.fire('revertThis', {rid:this.rid, task:this.task});
         }
       });
