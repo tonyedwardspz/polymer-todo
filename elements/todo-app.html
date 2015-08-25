@@ -178,7 +178,6 @@
             var idx = findWithAttr(this.todo, 'rid', e.target.rid);
             var itm = this.todo[idx];
             itm.task = e.target.task;
-            itm.user = this.$.tUser.value;
             itm.type = "done";
             this.$.pub.message = itm;
             this.$.pub.publish();
@@ -187,7 +186,6 @@
             var idx = findWithAttr(this.todo, 'rid', e.target.rid);
             var itm = this.todo[idx];
             itm.task = e.target.task;
-            itm.user = this.$.tUser.value;
             itm.type = "edit";
             this.$.pub.message = itm;
             this.$.pub.publish();
@@ -209,11 +207,17 @@
             this.$.tTask.value = "";
         },
         deleteTask: function(e){
-          alert("tada")
           var idx = findWithAttr(this.done, 'rid', e.target.rid);
           var itm = this.done[idx];
           itm.type = "deleted";
-          console.log(itm)
+          this.$.pub.message = itm;
+          this.$.pub.publish();
+        },
+        revertTask: function(e){
+          var idx = findWithAttr(this.done, 'rid', e.target.rid);
+          var itm = this.done[idx];
+          itm.type = "todo";
+          var itm = this.splice('done', idx, 1)[0];
           this.$.pub.message = itm;
           this.$.pub.publish();
         },
@@ -226,7 +230,6 @@
                         break;
                     case "done":
                         var idx = findWithAttr(this.todo, 'rid',item.rid);
-                        
                         if (idx == -1){return;}
                         var itm = this.splice('todo', idx, 1)[0];
                         itm.task = item.task;
@@ -259,6 +262,7 @@
             this.addEventListener('edit', this.handleEdit);
             this.addEventListener('presence', presChange);
             this.addEventListener('deleteThis', this.deleteTask);
+            this.addEventListener('revertThis', this.revertTask);
             function presChange(e){
                 var pres = this.present.pop()
                 this.$.here.innerHTML = pres.occupancy;
